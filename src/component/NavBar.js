@@ -3,6 +3,7 @@ import {makeStyles} from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Button from '@material-ui/core/Button';
+import {withRouter} from 'react-router-dom'
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -17,22 +18,35 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export default function NavBar() {
+function NavBar(props) {
     const classes = useStyles();
+
+    const goNewRequest = () => {
+        props.history.push('/newRequest')
+    }
+
+    const goHistory = () => {
+        props.history.push('/history')
+    }
+    const logout = () => {
+        props.history.push('/')
+    }
 
     return (
         <div className={classes.root}>
             <AppBar position="static">
                 <Toolbar>
-                    <Button color="inherit">
+                    <Button color="inherit" onClick={goNewRequest}>
                         New crawling request
                     </Button>
-                    <Button color="inherit">
+                    <Button color="inherit" onClick={goHistory}>
                         Requests history
                     </Button>
-                    <Button color="inherit">Logout</Button>
+                    <Button color="inherit" onClick={logout}>Logout</Button>
                 </Toolbar>
             </AppBar>
         </div>
     );
 }
+
+export default withRouter(NavBar)

@@ -51,7 +51,7 @@ export default function SignInSide(props) {
     const classes = useStyles();
 
     const handleSubmit = (e) => {
-        props.history.push('./home')
+        props.history.push('./history')
     }
 
     return (
