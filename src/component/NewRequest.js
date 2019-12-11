@@ -5,6 +5,7 @@ import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import {makeStyles} from "@material-ui/core";
 import picture from "../web-crawlers2.jpg";
+import axios from 'axios'
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -61,7 +62,9 @@ function NewRequest(props) {
     }
 
     let handleSubmit = (e) => {
-
+        axios.get('localhost:8080/as', formula).then(res => {
+            console.log(res)
+        })
     }
 
 
