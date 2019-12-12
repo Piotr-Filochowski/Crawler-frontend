@@ -62,8 +62,14 @@ function NewRequest(props) {
     }
 
     let handleSubmit = (e) => {
-        axios.get('localhost:8080/as', formula).then(res => {
+        e.preventDefault()
+        let newFormula = {
+            topic: formula.topic,
+            urls: [formula.url1, formula.url2, formula.url3, formula.url4, formula.comment]
+        }
+        axios.post('http://localhost:8080/scrap', newFormula).then(res => {
             console.log(res)
+            props.history.push('/history')
         })
     }
 
@@ -81,7 +87,7 @@ function NewRequest(props) {
                     label="Topic"
                     name="topic"
                     autoFocus
-                    fullWidth="true"
+                    fullWidth={true}
                     onChange={handleChange}
                 />
                 <br></br>
@@ -93,7 +99,7 @@ function NewRequest(props) {
                     label="url"
                     type="text"
                     id="url1"
-                    fullWidth="true"
+                    fullWidth={true}
                     onChange={handleChange}
                 />
                 <br></br>
@@ -104,7 +110,7 @@ function NewRequest(props) {
                     label="url"
                     type="text"
                     id="url2"
-                    fullWidth="true"
+                    fullWidth={true}
                     onChange={handleChange}
                 />
                 <br></br>
@@ -115,7 +121,7 @@ function NewRequest(props) {
                     label="url"
                     type="text"
                     id="url3"
-                    fullWidth="true"
+                    fullWidth={true}
                     onChange={handleChange}
                 />
                 <br></br>
@@ -126,7 +132,7 @@ function NewRequest(props) {
                     label="url"
                     type="text"
                     id="url4"
-                    fullWidth="true"
+                    fullWidth={true}
                     onChange={handleChange}
                 />
                 <br/>
@@ -137,9 +143,9 @@ function NewRequest(props) {
                     label="comment"
                     type="text"
                     id="comment"
-                    multiline="true"
+                    multiline={true}
                     rows="3"
-                    fullWidth="true"
+                    fullWidth={true}
                     onChange={handleChange}
                 />
                 <br></br>
