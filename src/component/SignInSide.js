@@ -1,11 +1,8 @@
-import React from 'react';
+import React, {useState} from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
-import Link from '@material-ui/core/Link';
 import Paper from '@material-ui/core/Paper';
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
@@ -14,7 +11,9 @@ import Typography from '@material-ui/core/Typography';
 import {makeStyles} from '@material-ui/core/styles';
 import picture from '../web-crawlers2.jpg'
 import Copyright from "./Copyright";
-
+import axios from 'axios'
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Dialog from '@material-ui/core/Dialog';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -47,12 +46,46 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
+
+
 export default function SignInSide(props) {
     const classes = useStyles();
 
+    const [auth, setAuth] = useState(
+        {
+            login: "",
+            password: ""
+        }
+    );
+
     const handleSubmit = (e) => {
-        props.history.push('./history')
+        e.preventDefault()
+        axios.post('http://localhost:8080/auth/login', auth).then(res => {
+            props.setNewLogin(auth.login);
+            props.history.push('/history')
+        }).catch(res => {
+            console.log(res)
+            console.log("Something wrong happend")
+            handleClickOpen()
+        })
     }
+
+    const handleChange = (e) => {
+        setAuth({
+            ...auth,
+            [e.target.id]: e.target.value
+        })
+    }
+
+    const [open, setOpen] = React.useState(false);
+
+    const handleClickOpen = () => {
+        setOpen(true);
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+    };
 
     return (
         <Grid container component="main" className={classes.root}>
@@ -66,17 +99,26 @@ export default function SignInSide(props) {
                     <Typography component="h1" variant="h5">
                         Sign in
                     </Typography>
+                    <Dialog
+                        open={open}
+                        onClose={handleClose}
+                        aria-labelledby="alert-dialog-title"
+                        aria-describedby="alert-dialog-description"
+                    >
+                        <DialogTitle id="alert-dialog-title">{"Wrong login or password"}</DialogTitle>
+                    </Dialog>
                     <form className={classes.form} noValidate onSubmit={handleSubmit}>
                         <TextField
                             variant="outlined"
                             margin="normal"
                             required
                             fullWidth
-                            id="email"
+                            id="login"
                             label="Email Address"
                             name="email"
                             autoComplete="email"
                             autoFocus
+                            onChange={handleChange}
                         />
                         <TextField
                             variant="outlined"
@@ -88,10 +130,7 @@ export default function SignInSide(props) {
                             type="password"
                             id="password"
                             autoComplete="current-password"
-                        />
-                        <FormControlLabel
-                            control={<Checkbox value="remember" color="primary"/>}
-                            label="Remember me"
+                            onChange={handleChange}
                         />
                         <Button
                             type="submit"
@@ -102,18 +141,6 @@ export default function SignInSide(props) {
                         >
                             Sign In
                         </Button>
-                        <Grid container>
-                            <Grid item xs>
-                                <Link href="#" variant="body2">
-                                    Forgot password?
-                                </Link>
-                            </Grid>
-                            <Grid item>
-                                <Link href="#" variant="body2">
-                                    {"Don't have an account? Sign Up"}
-                                </Link>
-                            </Grid>
-                        </Grid>
                         <Box mt={5}>
                             <Copyright/>
                         </Box>

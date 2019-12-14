@@ -6,6 +6,7 @@ import Button from "@material-ui/core/Button";
 import {makeStyles} from "@material-ui/core";
 import picture from "../web-crawlers2.jpg";
 import axios from 'axios'
+import Cookies from 'js-cookie';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -41,6 +42,11 @@ const useStyles = makeStyles(theme => ({
 
 function NewRequest(props) {
 
+
+    const api = axios.create({
+        withCredentials: true
+    });
+
     const classes = useStyles()
 
     const [formula, setFormula] = useState(
@@ -65,11 +71,15 @@ function NewRequest(props) {
         e.preventDefault()
         let newFormula = {
             topic: formula.topic,
-            urls: [formula.url1, formula.url2, formula.url3, formula.url4, formula.comment]
+            urls: [formula.url1, formula.url2, formula.url3, formula.url4, formula.comment],
+            username: props.login.login,
+            comment: formula.comment
         }
-        axios.post('http://localhost:8080/scrap', newFormula).then(res => {
-            console.log(res)
+        api.post('http://localhost:8080/scrap', newFormula).then(res => {
+            console.log(res.status)
             props.history.push('/history')
+        }).catch((res) => {
+            console.log(res)
         })
     }
 
